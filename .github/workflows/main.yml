@@ -14,4 +14,3 @@ jobs:
           node-version: '16'
       - run: npm install -g es-check
       - run: es-check es5 './js/**/*.js'
-      - run: cat ./js/main.js
