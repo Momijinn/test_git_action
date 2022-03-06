@@ -11,3 +11,125 @@ yml ファイルに以下のようなセンシティブな内容はNG
 ・クレジットカード番号
 ・PIN番号
 
+
+action の構成
+https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows
+
+イベント (on)
+ワークフローの実行トリガー
+
+使えそうなやつピックアップ
+
+・gollum
+https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows#gollum
+wiki ページの作成と更新
+
+・ milestone
+https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows#milestone
+マイルストンの作成、変更
+
+・page_build
+リポジトリで github page が有効で誰かが github action の公開ブランチにシュッシュしたときに実行
+
+・ pull_request
+https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows#pull_request
+pull request が発生したときに実行される。
+プルリクストが開かれたとき/再度開かれたとき/pull request しているブランチが更新されたとき に実行される。
+pull request 時のイベントを細かく制御することができる。
+例えば 特定のレビューワーのときに実行させるとか。
+```
+on:
+  pull_request:
+    types: [review_requested]
+jobs:
+  specific_review_requested:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.requested_team.name == 'octo-team'}}
+    steps:
+      - run: echo 'A review from octo-team was requested'
+```
+ブランチ名にて releases/ で始まるブランチを対象にするとか
+```
+on:
+  pull_request:
+    types:
+      - opened
+    branches:    
+      - 'releases/**'
+```
+プルリクエストで変更された特定のファイルのみ。
+以下のレでは .js の場合
+```
+on:
+  pull_request:
+    paths:
+      - '**.js'
+```
+マージされたときに実行. if_merged をつける
+```
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo The PR was merged
+```
+
+・ push
+https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows#push
+コミットまたはタグをプッシュしたときに実行
+```
+on:
+  push
+```
+特定のブランチにプッシュした場合にワーク副露を実行する場合
+以下の例は main と releases/**
+```
+on:
+  push:
+    branches:    
+      - 'main'
+      - 'releases/**'
+```
+・schedule
+定期実行
+```
+on:
+  schedule:
+    # *はYAMLにおける特殊文字なので、この文字列はクオートしなければならない
+    - cron:  '30 5,17 * * *'
+```
+
+・status
+git コミットのステータスが変更されたときに実行。
+error マークとか failure マークなったとき等に実行される
+```
+on:
+  status
+jobs:
+  if_error_or_failure:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.state == 'error' ||
+      github.event.state == 'failure'
+    steps:
+      - env:
+          DESCRIPTION: ${{ github.event.description }}
+        run: |
+          echo The status is error or failed: $DESCRIPTION
+
+```
+・workflow_run/workflow_call
+workflow を分けたいときとかに使う
+
+ジョブ (job)
+
+アクション(run-on)
+
+ランナー(run)
