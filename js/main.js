@@ -1,8 +1,8 @@
 window.onload = function () {
-  console.log('start');
+  console.log("start");
 
-  var btn = document.getElementById('button');
-  btn.addEventListener('click', function () {
+  var btn = document.getElementById("button");
+  btn.addEventListener("click", function () {
     alert('homo');
   });
 }
