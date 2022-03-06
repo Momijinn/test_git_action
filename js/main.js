@@ -1,3 +1,8 @@
 window.onload = function () {
-  console.log('hello')
+  console.log('start');
+
+  var btn = document.getElementById('button');
+  btn.addEventListener('click', function () {
+    alert('push');
+  });
 }
