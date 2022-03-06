@@ -7,10 +7,35 @@ jobs:
   test_job:
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v3
-      - run: git branch
-      - uses: actions/setup-node@v2
+      - name: Setup checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v17.2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - run: npm install -g es-check
-      - run: es-check es5 './js/**/*.js'
+      
+      - name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            
+      - name: Install es-check
+        run: npm install -g es-check
+
+      # - name: Run
+      #   run: es-check es5 './js/**/*.js'
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
