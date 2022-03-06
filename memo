@@ -12,10 +12,11 @@ yml ファイルに以下のようなセンシティブな内容はNG
 ・PIN番号
 
 
-action の構成
+== action の構成
 https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows
 
-イベント (on)
+
+== イベント (on)
 ワークフローの実行トリガー
 
 使えそうなやつピックアップ
@@ -128,8 +129,42 @@ jobs:
 ・workflow_run/workflow_call
 workflow を分けたいときとかに使う
 
-ジョブ (job)
 
-アクション(run-on)
+== ジョブ (job)
+ワークフローのステップ。
+ステップは順番に実行される。
+ジョブは並行して実行される。
 
-ランナー(run)
+ジョブID。
+```
+jobs:
+  my_first_job: // これ
+    name: My first job
+  my_second_job:
+    name: My second job
+```
+
+jobs.<job_id>.name で取り出す事ができる。
+英字または_で始める必要があり、英数字と-、_しか使用できない。
+
+ジョブの絶低条件定義
+needs をつける。
+```
+jobs:
+  job1:
+  job2:
+    needs: job1
+  job3:
+    needs: [job1, job2]
+```
+
+ジョブを実行するランナー
+runs-on で設定する
+使えるホストは https://docs.github.com/ja/actions/using-jobs/choosing-the-runner-for-a-job# を参照
+よく使うのは、 ubuntu-18.04, ubuntu-20.04, ubuntu-latest
+
+
+アクション
+サードパティのモジュール
+
+ランナー()
