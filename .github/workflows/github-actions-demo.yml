@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v3
-      - run git branch
+      - run: git branch
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
