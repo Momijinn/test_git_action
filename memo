@@ -1,0 +1,13 @@
+ここを見ながらセットアップ
+https://docs.github.com/ja/actions/quickstart#introduction
+
+yml の命名規則は 英数字とハイフン (-) 
+
+yml ファイルに以下のようなセンシティブな内容はNG
+・パスワード
+・SSH keys
+・AWSアクセスキー
+・APIキー
+・クレジットカード番号
+・PIN番号
+
